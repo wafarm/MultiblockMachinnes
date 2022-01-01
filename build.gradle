@@ -1,1 +1,87 @@
-group 'com.wafarm'
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name 'forge'
+            url 'https://maven.minecraftforge.net/'
+        }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
+    }
+}
+
+plugins {
+    id 'scala'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+version = "${mod_version}-forge-${minecraft_version}"
+group = 'com.wafarm'
+archivesBaseName = 'MultiblockMachines'
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+repositories {
+    maven {
+        name 'Kotori316 Azure Maven'
+        url 'https://pkgs.dev.azure.com/Kotori316/minecraft/_packaging/mods/maven/v1'
+    }
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: '20201028-1.16.3'
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation "org.scala-lang:scala-library:${scala_version}"
+    implementation "com.kotori316:scalablecatsforce:${scf_version}"
+}
+
+ext {
+    versionProperties = [
+            "loader_version": scf_version_range,
+            "version": mod_version,
+            "forge_version": forge_version_range,
+            "minecraft_version": minecraft_version_range
+    ]
+}
+
+sourceSets {
+    main {
+        resources {
+            include '**/**'
+        }
+    }
+}
+
+def mainReplaceResource = createReplaceResourcesTask("main", sourceSets.main)
+
+def createReplaceResourcesTask(String output, SourceSet sourceSet) {
+    return tasks.register("${output}ReplaceResources", Copy) {
+        it.outputs.upToDateWhen { false }
+        def modsToml = copySpec {
+            from(sourceSet.resources) {
+                include 'META-INF/mods.toml'
+                expand versionProperties
+            }
+        }
+        it.with modsToml
+        it.into "$buildDir/resources/$output/"
+    }
+}
+
+processResources { setupProcessResources(processResources, mainReplaceResource) }
+
+def setupProcessResources(ProcessResources process, TaskProvider<Task> replaceResources) {
+    process.duplicatesStrategy(DuplicatesStrategy.FAIL)
+    process.exclude('META-INF/mods.toml')
+    process.configure { finalizedBy(replaceResources) }
+}
+
+jar {
+    duplicatesStrategy(DuplicatesStrategy.FAIL)
+    from sourceSets.main.output
+    afterEvaluate { finalizedBy reobfJar }
+}

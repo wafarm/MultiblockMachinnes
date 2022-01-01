@@ -1,0 +1,22 @@
+modLoader="kotori_scala"
+loaderVersion="${loader_version}"
+license="MIT"
+
+[[mods]]
+    modId="multiblockmachines"
+    version="${version}"
+    displayName="Multiblock Machines"
+    authors="Wafarm"
+    description="A mod that supports adding custom multiblock machines to game."
+
+[[dependencies.multiblockmachines]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version}"
+    side="BOTH"
+
+[[dependencies.multiblockmachines]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version}"
+    side="BOTH"
