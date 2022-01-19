@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "multiblockmachines:block/base",
+		"north": "multiblockmachines:block/base",
+		"south": "multiblockmachines:block/base",
+		"east": "multiblockmachines:block/base",
+		"west": "multiblockmachines:block/base",
+		"up": "multiblockmachines:block/base",
+		"down": "multiblockmachines:block/base"
+	}
+}

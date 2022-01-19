@@ -1,16 +1,20 @@
 package com.wafarm.multiblockmachines
 
-import com.wafarm.multiblockmachines.MultiblockMachines.logger
+import com.wafarm.multiblockmachines.common.registry.{BlockRegistry, ItemRegistry}
+import net.minecraft.item.{ItemGroup, ItemStack}
 import net.minecraftforge.fml.common.Mod
-import org.apache.logging.log4j.{LogManager, Logger}
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 
 @Mod("multiblockmachines")
 class MultiblockMachines {
-    MultiblockMachines => {
-        logger.info("Multiblock Machines loading.")
-    }
+    ItemRegistry.ITEMS.register(FMLJavaModLoadingContext.get.getModEventBus)
+    BlockRegistry.BLOCKS.register(FMLJavaModLoadingContext.get.getModEventBus)
 }
 
 object MultiblockMachines {
-    private val logger: Logger = LogManager.getLogger
+    val MOD_ID: String = "multiblockmachines"
+    val MOD_NAME: String = "Multiblock Machines"
+    val MultiblockMachinesItemGroup: ItemGroup = new ItemGroup(MOD_ID) {
+        override def createIcon(): ItemStack = new ItemStack(ItemRegistry.controllerBlock.get())
+    }
 }

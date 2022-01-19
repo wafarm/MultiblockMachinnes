@@ -1,0 +1,6 @@
+{
+    "parent": "multiblockmachines:block/base",
+    "textures": {
+        "north": "multiblockmachines:block/controller_front"
+    }
+}
